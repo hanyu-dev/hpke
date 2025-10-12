@@ -1,0 +1,21 @@
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+coverage:
+  status:
+    changes: false
+    patch: false
+    project:
+      default:
+        # basic
+        target: auto
+        threshold: 0%
+        base: auto
+        flags:
+          - unit
+        paths:
+          - "src"
+        if_ci_failed: error

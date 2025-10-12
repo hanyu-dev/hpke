@@ -1,0 +1,52 @@
+[package]
+name = "reatls-hpke"
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+categories.workspace = true
+description = """
+RFC 9180 Hybrid Public Key Encryption (HPKE) implementation in Rust.
+"""
+keywords.workspace = true
+license.workspace = true
+readme = "README.md"
+repository.workspace = true
+
+[dependencies]
+const-hex = { version = "1.16", default-features = false, features = ["alloc"], optional = true }
+reatls-hpke-crypto = { version = "0.0.0", path = "../reatls-hpke-crypto", default-features = false }
+serde = { version = "1.0", features = ["derive"], optional = true }
+serde_json = { version = "1.0", features = ["preserve_order"], optional = true }
+smallvec = "2.0.0-alpha.11"
+zeroize = "1.8"
+
+[dev-dependencies]
+criterion = { version = "0.7", features = ["html_reports"] }
+reatls-hpke = { path = ".", features = ["std", "hazmat", "serde", "test-vectors"] }
+reatls-hpke-crypto = { path = "../reatls-hpke-crypto", features = [
+    "std",
+    "hazmat",
+    "backend-rustcrypto",
+    "backend-graviola",
+    "backend-ring",
+    "backend-aws-lc-rs",
+] }
+rand = "0.9"
+serde_json = "1.0"
+test-case = "3.3"
+
+[features]
+default = []
+
+# Enable std support
+std = ["serde?/std", "reatls-hpke-crypto/std"]
+
+# Enable hazmat APIs / behaviours
+hazmat = ["dep:const-hex"]
+
+# Enable serialization support via serde
+serde = ["dep:serde", "reatls-hpke-crypto/serde"]
+
+# Test vectors from RFC 9180 (For testing and validation only)
+test-vectors = ["std", "serde", "dep:const-hex", "dep:serde_json"]
