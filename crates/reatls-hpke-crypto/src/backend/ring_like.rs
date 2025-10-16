@@ -145,33 +145,25 @@ impl Crypto for HpkeCrypto {
 
                 let prk = ring_like::hkdf::Prk::new_less_safe(ring_like::hkdf::$alg, $prk);
                 let okm = prk
-                    .expand($info, ring_like::hkdf::$alg)
+                    .expand($info, Len($l))
                     .map_err(|_| CryptoError::KdfExpandInvalidPrkLen)?;
 
                 let mut out = Okm::empty();
 
                 // Only accept buffer with hmac output length.
                 // https://docs.rs/ring/latest/src/ring/hkdf.rs.html#194
-                okm.fill(
-                    out.as_mut_buffer(
-                        ring_like::hkdf::$alg
-                            .hmac_algorithm()
-                            .len(),
-                    ),
-                )
-                .unwrap_or_else(|_| {
-                    unreachable!(
-                        "Fails if (and only if) the requested output length ({}, {}) is larger \
-                         than 255 times the size of the digest algorithm's output ({})",
-                        $l,
-                        out.len(),
-                        ring_like::hkdf::$alg
-                            .hmac_algorithm()
-                            .len()
-                    )
-                });
-
-                out.truncate($l);
+                okm.fill(out.as_mut_buffer($l))
+                    .unwrap_or_else(|_| {
+                        unreachable!(
+                            "Fails if (and only if) the requested output length ({}, {}) is \
+                             larger than 255 times the size of the digest algorithm's output ({})",
+                            $l,
+                            out.len(),
+                            ring_like::hkdf::$alg
+                                .hmac_algorithm()
+                                .len()
+                        )
+                    });
 
                 Ok(out)
             }};
@@ -320,5 +312,13 @@ impl Crypto for HpkeCrypto {
             }
             _ => Err(CryptoError::KemOpUnsupported),
         }
+    }
+}
+
+struct Len(usize);
+
+impl ring_like::hkdf::KeyType for Len {
+    fn len(&self) -> usize {
+        self.0
     }
 }
