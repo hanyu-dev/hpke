@@ -36,7 +36,7 @@ use crate::{
 };
 
 #[non_exhaustive]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 /// See [module-level](self) documentation.
 pub struct HpkeCrypto {}
 
@@ -46,6 +46,13 @@ impl HpkeCrypto {
     /// Currently, this does nothing and always succeeds.
     pub const fn new() -> Result<Self, CryptoError> {
         Ok(Self {})
+    }
+
+    /// Create a new `HpkeCrypto` instance.
+    ///
+    /// Currently, this does nothing and always succeeds.
+    pub const fn default() -> Self {
+        Self {}
     }
 }
 
