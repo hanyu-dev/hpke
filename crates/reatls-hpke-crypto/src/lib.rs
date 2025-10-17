@@ -13,6 +13,7 @@ extern crate std;
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 use core::fmt;
+use core::ops::DerefMut;
 
 use smallvec::SmallVec;
 use subtle::ConstantTimeEq;
@@ -320,6 +321,139 @@ pub trait Crypto: fmt::Debug + Send + Sync {
         sk_x: HpkePrivateKeyRef<'_>,
         pk_y: HpkePublicKeyRef<'_>,
     ) -> Result<SharedSecret, CryptoError>;
+}
+
+impl<T> Crypto for T
+where
+    T: DerefMut<Target = dyn Crypto> + fmt::Debug + Send + Sync + ?Sized,
+{
+    fn secure_random_fill(&mut self, buf: &mut [u8]) -> Result<(), CryptoError> {
+        (**self).secure_random_fill(buf)
+    }
+
+    fn is_kem_supported(&self, alg: &HpkeKemId) -> bool {
+        (**self).is_kem_supported(alg)
+    }
+
+    fn kem_generate_key_pair(&mut self, alg: HpkeKemId) -> Result<HpkeKeyPair, CryptoError> {
+        (**self).kem_generate_key_pair(alg)
+    }
+
+    fn kem_encap(
+        &self,
+        alg: HpkeKemId,
+        pk_r: HpkePublicKeyRef<'_>,
+    ) -> Result<(SharedSecret, EncapsulatedSecret), CryptoError> {
+        (**self).kem_encap(alg, pk_r)
+    }
+
+    fn kem_decap(
+        &self,
+        alg: HpkeKemId,
+        enc: EncapsulatedSecret,
+        sk_r: HpkePrivateKeyRef<'_>,
+    ) -> Result<SharedSecret, CryptoError> {
+        (**self).kem_decap(alg, enc, sk_r)
+    }
+
+    fn is_kdf_supported(&self, alg: &HpkeKdfId) -> bool {
+        (**self).is_kdf_supported(alg)
+    }
+
+    fn kdf_extract(
+        &self,
+        alg: HpkeKdfId,
+        salt: &[u8],
+        ikm: IkmRef<'_>,
+    ) -> Result<Prk, CryptoError> {
+        (**self).kdf_extract(alg, salt, ikm)
+    }
+
+    fn kdf_extract_concated(
+        &self,
+        alg: HpkeKdfId,
+        salt: &[u8],
+        ikms: &[IkmRef<'_>],
+    ) -> Result<Prk, CryptoError> {
+        (**self).kdf_extract_concated(alg, salt, ikms)
+    }
+
+    fn kdf_expand(
+        &self,
+        alg: HpkeKdfId,
+        prk: PrkRef<'_>,
+        info: &[u8],
+        l: usize,
+    ) -> Result<Okm, CryptoError> {
+        (**self).kdf_expand(alg, prk, info, l)
+    }
+
+    fn kdf_expand_multi_info(
+        &self,
+        alg: HpkeKdfId,
+        prk: PrkRef<'_>,
+        infos: &[&[u8]],
+        l: usize,
+    ) -> Result<Okm, CryptoError> {
+        (**self).kdf_expand_multi_info(alg, prk, infos, l)
+    }
+
+    fn is_aead_supported(&self, alg: &HpkeAeadId) -> bool {
+        (**self).is_aead_supported(alg)
+    }
+
+    fn aead_seal(
+        &self,
+        crypto_info: &HpkeAead,
+        aad: &[u8],
+        plaintext: &[u8],
+    ) -> Result<Vec<u8>, CryptoError> {
+        (**self).aead_seal(crypto_info, aad, plaintext)
+    }
+
+    fn aead_seal_in_place(
+        &self,
+        crypto_info: &HpkeAead,
+        aad: &[u8],
+        buffer: &mut Vec<u8>,
+    ) -> Result<(), CryptoError> {
+        (**self).aead_seal_in_place(crypto_info, aad, buffer)
+    }
+
+    fn aead_open(
+        &self,
+        crypto_info: &HpkeAead,
+        aad: &[u8],
+        ciphertext: &[u8],
+    ) -> Result<Vec<u8>, CryptoError> {
+        (**self).aead_open(crypto_info, aad, ciphertext)
+    }
+
+    fn aead_open_in_place(
+        &self,
+        crypto_info: &HpkeAead,
+        aad: &[u8],
+        buffer: &mut Vec<u8>,
+    ) -> Result<(), CryptoError> {
+        (**self).aead_open_in_place(crypto_info, aad, buffer)
+    }
+
+    fn sk(&self, alg: HpkeKemId, sk: &[u8]) -> Result<HpkePrivateKey, CryptoError> {
+        (**self).sk(alg, sk)
+    }
+
+    fn pk(&self, alg: HpkeKemId, sk: HpkePrivateKeyRef<'_>) -> Result<HpkePublicKey, CryptoError> {
+        (**self).pk(alg, sk)
+    }
+
+    fn dh(
+        &self,
+        alg: HpkeKemId,
+        sk_x: HpkePrivateKeyRef<'_>,
+        pk_y: HpkePublicKeyRef<'_>,
+    ) -> Result<SharedSecret, CryptoError> {
+        (**self).dh(alg, sk_x, pk_y)
+    }
 }
 
 #[derive(Debug)]
