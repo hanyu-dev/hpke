@@ -21,7 +21,7 @@ use alloc::vec::Vec;
 use core::fmt;
 use core::marker::PhantomData;
 
-pub use reatls_hpke_crypto::*;
+pub use hpke_crypto::*;
 
 pub use crate::error::Error;
 
@@ -1145,10 +1145,10 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
-            reatls_hpke_crypto::backend::HpkeCryptoGraviola::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRing::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new
+            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoGraviola::new,
+            hpke_crypto::backend::HpkeCryptoRing::new,
+            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_setup<C, F>(crypto_backend: F)
@@ -1272,10 +1272,10 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
-            reatls_hpke_crypto::backend::HpkeCryptoGraviola::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRing::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new
+            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoGraviola::new,
+            hpke_crypto::backend::HpkeCryptoRing::new,
+            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_key_schedule<C: Crypto + Send + Sync + UnwindSafe, F>(crypto_backend: F)
@@ -1445,10 +1445,10 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
-            reatls_hpke_crypto::backend::HpkeCryptoGraviola::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRing::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new
+            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoGraviola::new,
+            hpke_crypto::backend::HpkeCryptoRing::new,
+            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_encryption<C: Crypto + Send + Sync + UnwindSafe, F>(crypto_backend: F)
@@ -1539,10 +1539,10 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
-            reatls_hpke_crypto::backend::HpkeCryptoGraviola::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRing::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new
+            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoGraviola::new,
+            hpke_crypto::backend::HpkeCryptoRing::new,
+            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_exported_values<C: Crypto + Send + Sync + UnwindSafe, F>(crypto_backend: F)

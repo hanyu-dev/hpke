@@ -2,7 +2,7 @@
 
 use core::fmt;
 
-use reatls_hpke_crypto::CryptoError;
+use hpke_crypto::CryptoError;
 
 /// HPKE Error types.
 #[derive(Debug)]

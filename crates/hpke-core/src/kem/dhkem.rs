@@ -3,7 +3,7 @@
 //!
 //! [RFC 9180, section 4.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-4.1
 
-use reatls_hpke_crypto::{
+use hpke_crypto::{
     Crypto, CryptoError, EncapsulatedSecret, EncapsulatedSecretRef, HpkeKemId, HpkePrivateKey,
     HpkePrivateKeyRef, HpkePublicKey, HpkePublicKeyRef, IkmRef, SharedSecret,
 };

@@ -1,13 +1,13 @@
 //! Testing KDF_* implementations
 
-use reatls_hpke_crypto::{Crypto, HpkeKdfId, IkmRef};
+use hpke_crypto::{Crypto, HpkeKdfId, IkmRef};
 
 #[test_case::test_matrix(
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         HpkeKdfId::HKDF_SHA256,
@@ -24,7 +24,7 @@ fn test_labeled_kdf(backend: impl Crypto, alg: HpkeKdfId) {
 
     let suite_id = [72, 80, 75, 69, 0, 16, 0, 1, 0, 3];
 
-    let prk = reatls_hpke_crypto::kdf::labeled_extract(
+    let prk = hpke_crypto::kdf::labeled_extract(
         &backend,
         alg,
         &suite_id,
@@ -43,7 +43,7 @@ fn test_labeled_kdf(backend: impl Crypto, alg: HpkeKdfId) {
         124, 84, 206, 239, 213, 34, 141, 43, 157, 156, 197, 224,
     ];
 
-    let okm = reatls_hpke_crypto::kdf::labeled_expand(
+    let okm = hpke_crypto::kdf::labeled_expand(
         &backend,
         alg,
         &suite_id,
@@ -59,16 +59,16 @@ fn test_labeled_kdf(backend: impl Crypto, alg: HpkeKdfId) {
 
 #[test_case::test_matrix(
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         HpkeKdfId::HKDF_SHA256,
@@ -182,16 +182,16 @@ fn test_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto, alg: H
 
 #[test_case::test_matrix(
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         HpkeKdfId::HKDF_SHA256,
@@ -218,7 +218,7 @@ fn test_labeled_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto
 
     let suite_id = "test suite".as_bytes();
 
-    let prk_1 = reatls_hpke_crypto::kdf::labeled_extract(
+    let prk_1 = hpke_crypto::kdf::labeled_extract(
         &backend_1,
         alg,
         &suite_id,
@@ -228,7 +228,7 @@ fn test_labeled_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto
     )
     .unwrap();
 
-    let prk_2 = reatls_hpke_crypto::kdf::labeled_extract(
+    let prk_2 = hpke_crypto::kdf::labeled_extract(
         &backend_1,
         alg,
         &suite_id,
@@ -238,7 +238,7 @@ fn test_labeled_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto
     )
     .unwrap();
 
-    let prk_3 = reatls_hpke_crypto::kdf::labeled_extract(
+    let prk_3 = hpke_crypto::kdf::labeled_extract(
         &backend_2,
         alg,
         &suite_id,
@@ -260,7 +260,7 @@ fn test_labeled_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto
             .secure_random_fill(&mut info[16..])
             .unwrap();
 
-        let okm_1 = reatls_hpke_crypto::kdf::labeled_expand(
+        let okm_1 = hpke_crypto::kdf::labeled_expand(
             &backend_1,
             alg,
             &suite_id,
@@ -270,7 +270,7 @@ fn test_labeled_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto
             alg.n_hash(),
         )
         .unwrap();
-        let okm_2 = reatls_hpke_crypto::kdf::labeled_expand(
+        let okm_2 = hpke_crypto::kdf::labeled_expand(
             &backend_2,
             alg,
             &suite_id,

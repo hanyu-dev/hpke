@@ -3,16 +3,16 @@ use std::sync::LazyLock;
 
 use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use quanta::Instant;
-use reatls_hpke_crypto::{Crypto, HpkeAead};
+use hpke_crypto::{Crypto, HpkeAead};
 
-static BACKEND_AWS_LC_RS: LazyLock<reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs> =
-    LazyLock::new(|| reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap());
-static BACKEND_GRAVIOLA: LazyLock<reatls_hpke_crypto::backend::HpkeCryptoGraviola> =
-    LazyLock::new(|| reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap());
-static BACKEND_RING: LazyLock<reatls_hpke_crypto::backend::HpkeCryptoRing> =
-    LazyLock::new(|| reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap());
-static BACKEND_RUSTCRYPTO: LazyLock<reatls_hpke_crypto::backend::HpkeCryptoRustCrypto> =
-    LazyLock::new(|| reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap());
+static BACKEND_AWS_LC_RS: LazyLock<hpke_crypto::backend::HpkeCryptoAwsLcRs> =
+    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap());
+static BACKEND_GRAVIOLA: LazyLock<hpke_crypto::backend::HpkeCryptoGraviola> =
+    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap());
+static BACKEND_RING: LazyLock<hpke_crypto::backend::HpkeCryptoRing> =
+    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoRing::new().unwrap());
+static BACKEND_RUSTCRYPTO: LazyLock<hpke_crypto::backend::HpkeCryptoRustCrypto> =
+    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap());
 
 macro_rules! bench {
     (Enc => $fn_name:ident, $alg:ident, $name:expr, $key_len:expr) => {

@@ -606,7 +606,7 @@ impl HpkeCipherSuite {
     /// # Examples
     ///
     /// ```
-    /// # use reatls_hpke_crypto::{HpkeCipherSuite, HpkeKemId, HpkeKdfId, HpkeAeadId};
+    /// # use hpke_crypto::{HpkeCipherSuite, HpkeKemId, HpkeKdfId, HpkeAeadId};
     /// let suite = HpkeCipherSuite {
     ///     kem_id: HpkeKemId::DHKEM_P256_HKDF_SHA256,
     ///     kdf_id: HpkeKdfId::HKDF_SHA256,
@@ -818,7 +818,7 @@ impl HpkeKemId {
     /// # Example
     ///
     /// ```
-    /// # use reatls_hpke_crypto::{HpkeKemId};
+    /// # use hpke_crypto::{HpkeKemId};
     /// assert_eq!(
     ///     HpkeKemId::DHKEM_P521_HKDF_SHA512.suite_id(),
     ///     [75, 69, 77, 0, 18]

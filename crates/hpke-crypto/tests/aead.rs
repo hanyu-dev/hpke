@@ -2,7 +2,7 @@
 //!
 //! TODO: fuzz these tests
 
-use reatls_hpke_crypto::{Crypto, HpkeAead};
+use hpke_crypto::{Crypto, HpkeAead};
 
 const AES_128_KEY: [u8; 16] = [
     0x5b, 0x96, 0x04, 0xfe, 0x14, 0xea, 0xdb, 0xa9, 0x31, 0xb0, 0xcc, 0xf3, 0x48, 0x43, 0xda, 0xb9,
@@ -21,16 +21,16 @@ const NONCE: [u8; 12] = [
 
 #[test_case::test_matrix(
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
-        reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
+        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         HpkeAead::Aes128Gcm { key: AES_128_KEY, nonce: NONCE },

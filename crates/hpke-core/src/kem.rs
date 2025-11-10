@@ -4,7 +4,7 @@
 
 pub mod dhkem;
 
-use reatls_hpke_crypto::{
+use hpke_crypto::{
     Crypto, EncapsulatedSecret, EncapsulatedSecretRef, HpkeKemId, HpkePrivateKey,
     HpkePrivateKeyRef, HpkePublicKey, HpkePublicKeyRef, IkmRef, SharedSecret,
 };
@@ -109,10 +109,10 @@ mod tests {
 
     #[test_case::test_matrix(
         [
-            reatls_hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
-            reatls_hpke_crypto::backend::HpkeCryptoGraviola::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRing::new,
-            reatls_hpke_crypto::backend::HpkeCryptoRustCrypto::new
+            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoGraviola::new,
+            hpke_crypto::backend::HpkeCryptoRing::new,
+            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn kat_derive_key_pair<C: Crypto + Send + Sync + core::panic::UnwindSafe, F>(crypto_backend: F)

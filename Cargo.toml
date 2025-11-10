@@ -1,15 +1,15 @@
 [workspace]
-members = ["crates/reatls-hpke", "crates/reatls-hpke-crypto"]
+members = ["crates/hpke-core", "crates/hpke-crypto"]
 resolver = "3"
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.90.0"
+rust-version = "1.91.0"
 authors = ["Hantong Chen <cxwdyx620@gmail.com>", "Franziskus Kiefer <franziskuskiefer@gmail.com>"]
 categories = ["cryptography"]
 keywords = ["HPKE"]
 license = "MPL-2.0"
-repository = "https://github.com/hanyu-dev/reatls-hpke"
+repository = "https://github.com/hanyu-dev/hpke"
 
 [profile.dev]
 debug = "line-tables-only"
