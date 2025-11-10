@@ -1,5 +1,7 @@
 #![doc = include_str!("../README.md")]
 #![no_std]
+#![allow(clippy::match_same_arms)]
+#![allow(clippy::must_use_candidate)]
 
 #[cfg(feature = "_backend")]
 pub mod backend;
@@ -558,7 +560,7 @@ impl fmt::Display for CryptoError {
             Self::AeadOpen => write!(f, "AEAD open error"),
             Self::AeadUnsupported => write!(f, "AEAD unsupported"),
             Self::InsufficientRandomness => write!(f, "Insufficient randomness"),
-            Self::Custom(e) => write!(f, "Crypto library error: {}", e),
+            Self::Custom(e) => write!(f, "Crypto library error: {e}"),
         }
     }
 }
@@ -586,11 +588,12 @@ impl HpkeCipherSuite {
     /// this KEM algorithm; if used in the remainder of HPKE, it MUST start
     /// with "HPKE" and identify the entire ciphersuite in use.
     ///
-    /// The HPKE algorithm identifiers, i.e., the KEM kem_id, KDF kdf_id, and
-    /// AEAD aead_id 2-byte code points, as defined in other places,
+    /// The HPKE algorithm identifiers, i.e., the KEM `kem_id`, KDF `kdf_id`,
+    /// and AEAD `aead_id` 2-byte code points, as defined in other places,
     /// respectively, are assumed implicit from the implementation and
-    /// not passed as parameters. The implicit suite_id value used within
-    /// LabeledExtract and LabeledExpand is defined based on them as follows:
+    /// not passed as parameters. The implicit `suite_id` value used within
+    /// `LabeledExtract` and `LabeledExpand` is defined based on them as
+    /// follows:
     ///
     /// ```text
     /// suite_id = concat(
@@ -659,6 +662,7 @@ macro_rules! enum_builder {
         impl $name {
             #[inline]
             #[allow(unused)]
+            #[allow(clippy::missing_errors_doc)]
             /// Constructs an enum value from its integer representation.
             $vis const fn try_from_int(x: $uint) -> Result<Self, $error> {
                 match x {
@@ -984,16 +988,16 @@ enum_builder!(
     ///
     /// [RFC 9180, Section 7.3]: https://www.rfc-editor.org/rfc/rfc9180.html#section-7.3
     pub enum HpkeAeadId {
-        /// AES-128-GCM
+        /// `AES-128-GCM`
         AES_128_GCM = 0x0001,
 
-        /// AES-256-GCM
+        /// A`ES-256-GCM`
         AES_256_GCM = 0x0002,
 
-        /// ChaCha20Poly1305
+        /// `ChaCha20Poly1305`
         CHACHA20_POLY1305 = 0x0003,
 
-        /// Export-only
+        /// `Export-only`
         EXPORT_ONLY = 0xFFFF,
     }
 );
@@ -1133,6 +1137,10 @@ impl HpkeKeyPair {
         inner.extend_from_slice(sk.as_ref());
         inner.extend_from_slice(pk.as_ref());
 
+        #[allow(
+            clippy::cast_possible_truncation,
+            reason = "`Nsk` must be less than 256 for all defined KEMs"
+        )]
         Ok(Self {
             inner,
             split_offset: sk.as_ref().len() as u8,
@@ -1141,13 +1149,13 @@ impl HpkeKeyPair {
 
     #[inline]
     /// Returns the private key (skX).
-    pub fn sk<'a>(&'a self) -> HpkePrivateKeyRef<'a> {
+    pub fn sk(&self) -> HpkePrivateKeyRef<'_> {
         HpkePrivateKeyRef::const_from(&self.inner[..self.split_offset as usize])
     }
 
     #[inline]
     /// Returns the public key (pkX).
-    pub fn pk<'a>(&'a self) -> HpkePublicKeyRef<'a> {
+    pub fn pk(&self) -> HpkePublicKeyRef<'_> {
         HpkePublicKeyRef::const_from(&self.inner[self.split_offset as usize..])
     }
 }
@@ -1289,7 +1297,7 @@ impl fmt::Debug for HpkePrivateKeyRef<'_> {
         #[cfg(feature = "hazmat")]
         {
             f.debug_tuple(core::any::type_name::<Self>())
-                .field(&const_hex::encode(self.inner.as_ref()).as_str())
+                .field(&const_hex::encode(self.inner).as_str())
                 .finish()
         }
 
@@ -1539,6 +1547,7 @@ impl HpkeAead {
         }
     }
 
+    #[allow(clippy::return_self_not_must_use)]
     /// Copies the AEAD cryptographic material, updating the nonce using the
     /// given function and returns the final copy for the actual AEAD operation.
     ///

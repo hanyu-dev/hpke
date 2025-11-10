@@ -16,6 +16,10 @@ const HPKE_VERSION: &[u8] = b"HPKE-v1";
 ///
 /// See [RFC 9180, Section 4](https://www.rfc-editor.org/rfc/rfc9180.html#section-4) for details.
 ///
+/// # Errors
+///
+/// See [`CryptoError`] for possible error conditions.
+///
 /// [RFC 9180, Section 4]: https://www.rfc-editor.org/rfc/rfc9180.html#section-4
 pub fn labeled_extract<C: Crypto>(
     crypto_backend: &C,
@@ -47,6 +51,10 @@ pub fn labeled_extract<C: Crypto>(
 ///
 /// See [RFC 9180, Section 4](https://www.rfc-editor.org/rfc/rfc9180.html#section-4) for details.
 ///
+/// # Errors
+///
+/// See [`CryptoError`] for possible error conditions.
+///
 /// [RFC 9180, Section 4]: https://www.rfc-editor.org/rfc/rfc9180.html#section-4
 pub fn labeled_expand<'a, C, PRK>(
     crypto_backend: &C,
@@ -61,6 +69,10 @@ where
     C: Crypto,
     PRK: Into<PrkRef<'a>>,
 {
+    #[allow(
+        clippy::cast_possible_truncation,
+        reason = "`len` will not exceed u16::MAX in our use cases"
+    )]
     crypto_backend.kdf_expand_multi_info(
         alg,
         prk.into(),

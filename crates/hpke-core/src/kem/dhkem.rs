@@ -3,6 +3,9 @@
 //!
 //! [RFC 9180, section 4.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-4.1
 
+#![allow(clippy::needless_pass_by_value)]
+#![allow(clippy::similar_names)]
+
 use hpke_crypto::{
     Crypto, CryptoError, EncapsulatedSecret, EncapsulatedSecretRef, HpkeKemId, HpkePrivateKey,
     HpkePrivateKeyRef, HpkePublicKey, HpkePublicKeyRef, IkmRef, SharedSecret,
@@ -36,7 +39,7 @@ pub fn generate_key_pair<C: Crypto>(
 /// from the byte string `ikm`, where `ikm` SHOULD have at least `Nsk` bytes of
 /// entropy (see [RFC 9180, Section 7.1.3] for discussion).
 ///
-/// 7.1.3 DeriveKeyPair
+/// 7.1.3 `DeriveKeyPair`
 ///
 /// For P-256, P-384, and P-521, the `DeriveKeyPair()` function of the KEM
 /// performs rejection sampling over field elements:
@@ -121,7 +124,7 @@ pub fn derive_key_pair<C: Crypto>(
                     // let the crypto backend validate the private key
                     match crypto_backend.sk(alg, sk) {
                         Ok(sk) => break sk,
-                        Err(e) if matches!(e, CryptoError::KemMalformedSkX) => {}
+                        Err(CryptoError::KemMalformedSkX) => {}
                         Err(_) => return Err(Error::CryptoError(CryptoError::KemDeriveKeyPair)),
                     }
                 }

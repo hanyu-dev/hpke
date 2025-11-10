@@ -1,4 +1,5 @@
 #![doc = include_str!("../README.md")]
+#![no_std]
 #![forbid(unsafe_code, unused_must_use, unstable_features)]
 #![deny(
     trivial_casts,
@@ -8,7 +9,7 @@
     unused_extern_crates,
     unused_qualifications
 )]
-#![no_std]
+#![allow(clippy::must_use_candidate)]
 
 pub mod error;
 pub mod kem;
@@ -44,11 +45,17 @@ impl<C: Crypto> Hpke<C> {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     /// 5.1. Creating the Encryption Context
     ///
     /// This is a convenience function that wraps all four setup functions.
     ///
     /// See [RFC 9180, Section 5.1] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process, or if the provided PSK does not meet security requirements.
     ///
     /// [RFC 9180, Section 5.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1
     pub fn setup_s(
@@ -87,11 +94,17 @@ impl<C: Crypto> Hpke<C> {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     /// 5.1. Creating the Encryption Context
     ///
     /// This is a convenience function that wraps all four setup functions.
     ///
     /// See [RFC 9180, Section 5.1] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process, or if the provided PSK does not meet security requirements.
     ///
     /// [RFC 9180, Section 5.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1
     pub fn setup_r(
@@ -157,6 +170,11 @@ impl<C: Crypto> Hpke<C> {
     ///
     /// See [RFC 9180, Section 5.1.1] for details.
     ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process.
+    ///
     /// [RFC 9180, Section 5.1.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.1
     pub fn setup_base_s(
         &self,
@@ -200,6 +218,11 @@ impl<C: Crypto> Hpke<C> {
     /// ```
     ///
     /// See [RFC 9180, Section 5.1.1] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process.
     ///
     /// [RFC 9180, Section 5.1.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.1
     pub fn setup_base_r(
@@ -246,6 +269,11 @@ impl<C: Crypto> Hpke<C> {
     /// ```
     ///
     /// See [RFC 9180, Section 5.1.2] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process, or if the provided PSK does not meet security requirements.
     ///
     /// [RFC 9180, Section 5.1.2]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.2
     /// [RFC 9180, Section 9.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-9.1
@@ -297,6 +325,11 @@ impl<C: Crypto> Hpke<C> {
     /// ```
     ///
     /// See [RFC 9180, Section 5.1.2] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process, or if the provided PSK does not meet security requirements.
     ///
     /// [RFC 9180, Section 5.1.2]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.2
     /// [RFC 9180, Section 9.1]: https://www.rfc-editor.org/rfc/rfc9180.html#section-9.1
@@ -358,6 +391,11 @@ impl<C: Crypto> Hpke<C> {
     ///
     /// See [RFC 9180, Section 5.1.3] for details.
     ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process.
+    ///
     /// [RFC 9180, Section 5.1.3]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.3
     pub fn setup_auth_s(
         &self,
@@ -417,6 +455,11 @@ impl<C: Crypto> Hpke<C> {
     ///
     /// See [RFC 9180, Section 5.1.3] for details.
     ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process.
+    ///
     /// [RFC 9180, Section 5.1.3]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.3
     pub fn setup_auth_r(
         &self,
@@ -444,6 +487,7 @@ impl<C: Crypto> Hpke<C> {
         )
     }
 
+    #[allow(clippy::too_many_arguments)]
     /// 5.1.4. Authentication Using Both a PSK and an Asymmetric Key
     ///
     /// This mode is a straightforward combination of the PSK and authenticated
@@ -463,6 +507,11 @@ impl<C: Crypto> Hpke<C> {
     /// discussion.
     ///
     /// See [RFC 9180, Section 5.1.4] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process, or if the provided PSK does not meet security requirements.
     ///
     /// [RFC 9180, Section 5.1.4]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.4
     /// [RFC 9180, Section 9.5]: https://www.rfc-editor.org/rfc/rfc9180.html#section-9.5
@@ -490,6 +539,7 @@ impl<C: Crypto> Hpke<C> {
         Ok((enc, context))
     }
 
+    #[allow(clippy::too_many_arguments)]
     /// 5.1.4. Authentication Using Both a PSK and an Asymmetric Key
     ///
     /// This mode is a straightforward combination of the PSK and authenticated
@@ -509,6 +559,11 @@ impl<C: Crypto> Hpke<C> {
     /// discussion.
     ///
     /// See [RFC 9180, Section 5.1.4] for details.
+    ///
+    /// # Errors
+    ///
+    /// Various errors may occur during the key encapsulation or decapsulation
+    /// process, or if the provided PSK does not meet security requirements.
     ///
     /// [RFC 9180, Section 5.1.4]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.1.4
     /// [RFC 9180, Section 9.5]: https://www.rfc-editor.org/rfc/rfc9180.html#section-9.5
@@ -623,6 +678,7 @@ impl<C: Crypto> Hpke<C> {
         Ok([&[mode as u8], &*psk_id_hash, &*info_hash].concat())
     }
 
+    #[allow(clippy::needless_pass_by_value)]
     /// ```text
     /// def KeySchedule<ROLE>(mode, shared_secret, info, psk, psk_id):
     ///   // ...
@@ -644,7 +700,7 @@ impl<C: Crypto> Hpke<C> {
             crypto_backend,
             self.cipher_suite.kdf_id,
             &self.cipher_suite.suite_id(),
-            &*shared_secret,
+            &shared_secret,
             "secret",
             IkmRef::from(psk),
         )
@@ -694,7 +750,7 @@ impl<C: Crypto> Hpke<C> {
             &crypto_backend,
             self.cipher_suite.kdf_id,
             &self.cipher_suite.suite_id(),
-            PrkRef::from(&*secret),
+            PrkRef::from(&secret),
             "key",
             &key_schedule_context,
             self.cipher_suite.aead_id.n_key(),
@@ -704,7 +760,7 @@ impl<C: Crypto> Hpke<C> {
             &crypto_backend,
             self.cipher_suite.kdf_id,
             &self.cipher_suite.suite_id(),
-            PrkRef::from(&*secret),
+            PrkRef::from(&secret),
             "base_nonce",
             &key_schedule_context,
             self.cipher_suite.aead_id.n_nonce(),
@@ -714,7 +770,7 @@ impl<C: Crypto> Hpke<C> {
             &crypto_backend,
             self.cipher_suite.kdf_id,
             &self.cipher_suite.suite_id(),
-            PrkRef::from(&*secret),
+            PrkRef::from(&secret),
             "exp",
             &key_schedule_context,
             self.cipher_suite.kdf_id.n_hash(),
@@ -762,6 +818,10 @@ pub enum HpkeMode {
 impl HpkeMode {
     #[inline]
     /// Try to convert a `u8` into an `HpkeMode`.
+    ///
+    /// # Errors
+    ///
+    /// [`UnknownHpkeMode`] if the value does not correspond to a known mode.
     pub const fn try_from(value: u8) -> Result<Self, UnknownHpkeMode> {
         match value {
             v if v == Self::Base as u8 => Ok(Self::Base),
@@ -876,6 +936,10 @@ pub struct Context<C, Role> {
 
 impl<C: Crypto> Context<C, Sender> {
     /// See [`seal_in_place`](Self::seal_in_place).
+    ///
+    /// # Errors
+    ///
+    /// See [`seal_in_place`](Self::seal_in_place).
     pub fn seal(&mut self, aad: &[u8], pt: &[u8]) -> Result<Vec<u8>, Error> {
         let mut in_out = pt.to_vec();
 
@@ -896,6 +960,14 @@ impl<C: Crypto> Context<C, Sender> {
     ///   self.IncrementSeq()
     ///   return ct
     /// ```
+    ///
+    /// See [RFC 9180, Section 5.2] for details.
+    ///
+    /// # Errors
+    ///
+    /// [`CryptoError`], or message limit reached.
+    ///
+    /// [RFC 9180, Section 5.2]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.2
     pub fn seal_in_place(&mut self, aad: &[u8], in_out: &mut Vec<u8>) -> Result<(), Error> {
         self.crypto_backend.aead_seal_in_place(
             &self
@@ -916,6 +988,10 @@ impl<C: Crypto> Context<C, Sender> {
 }
 
 impl<C: Crypto> Context<C, Recipient> {
+    /// See [`open_in_place`](Self::open_in_place).
+    ///
+    /// # Errors
+    ///
     /// See [`open_in_place`](Self::open_in_place).
     pub fn open(&mut self, aad: &[u8], ct: &[u8]) -> Result<Vec<u8>, Error> {
         let mut in_out = ct.to_vec();
@@ -940,6 +1016,10 @@ impl<C: Crypto> Context<C, Recipient> {
     /// ```
     ///
     /// See [RFC 9180, Section 5.2] for details.
+    ///
+    /// # Errors
+    ///
+    /// [`CryptoError`], or message limit reached.
     ///
     /// [RFC 9180, Section 5.2]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.2
     pub fn open_in_place(&mut self, aad: &[u8], in_out: &mut Vec<u8>) -> Result<(), Error> {
@@ -971,6 +1051,14 @@ impl<C: Crypto, Role> Context<C, Role> {
     /// def Context.Export(exporter_context, L):
     ///   return LabeledExpand(self.exporter_secret, "sec", exporter_context, L)
     /// ```
+    ///
+    /// See [RFC 9180, Section 5.3] for details.
+    ///
+    /// # Errors
+    ///
+    /// See [`kdf::labeled_expand`].
+    ///
+    /// [RFC 9180, Section 5.3]: https://www.rfc-editor.org/rfc/rfc9180.html#section-5.3
     pub fn export(&self, exporter_context: &[u8], length: usize) -> Result<Okm, Error> {
         kdf::labeled_expand(
             &self.crypto_backend,
@@ -1119,7 +1207,7 @@ impl<'de> serde::Deserialize<'de> for HexString {
         D: serde::Deserializer<'de>,
     {
         let hex_str = <&str>::deserialize(deserializer)?;
-        let bytes = const_hex::decode(&hex_str).map_err(serde::de::Error::custom)?;
+        let bytes = const_hex::decode(hex_str).map_err(serde::de::Error::custom)?;
         Ok(HexString { bytes })
     }
 }

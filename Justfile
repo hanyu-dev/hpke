@@ -3,10 +3,10 @@
 _default:
 	just --list
 
-# Run all tests with nextest and cargo-llvm-cov
+# Run all tests with nextest
 ci-test *args:
 	#!/bin/bash -eux
-	cargo llvm-cov nextest --package hpke-core --package hpke-crypto {{args}} --locked --lcov --output-path coverage.lcov
+	cargo nextest run --package hpke-core --package hpke-crypto {{args}} --locked
 
 # =========== LOCAL COMMANDS ===========
 

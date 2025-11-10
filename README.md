@@ -1,5 +1,7 @@
 # HPKE
 
+[![Test pipeline](https://github.com/hanyu-dev/hpke/actions/workflows/ci.yml/badge.svg)](https://github.com/hanyu-dev/hpke/actions/workflows/ci.yml?query=branch%3Amain)
+[![Codecov](https://codecov.io/github/hanyu-dev/hpke/graph/badge.svg?token=JT1YXl8RRe)](https://codecov.io/github/hanyu-dev/hpke)
 [![License: MPL-2.0](https://img.shields.io/badge/license-MPL%202.0-blue.svg)](LICENSE-MPL)
 
 This is originally a fork of [hpke-rs](https://crates.io/crates/hpke-rs) and heavily modified.

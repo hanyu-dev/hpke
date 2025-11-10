@@ -1,0 +1,150 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "crates/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "crates/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/ci.yml"
+  merge_group:
+    paths:
+      - "crates/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/ci.yml"
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+  RUST_BACKTRACE: full
+
+jobs:
+  test:
+    name: Test (Rust ${{matrix.toolchain}}, ${{matrix.os-target.os}}, target ${{matrix.os-target.target}})
+    runs-on: ${{matrix.os-target.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os-target:
+          - os: macos-latest
+            target: "aarch64-apple-darwin"
+          - os: macos-latest
+            target: "aarch64-apple-ios"
+          - os: ubuntu-latest
+            target: "x86_64-unknown-linux-gnu"
+          - os: ubuntu-latest
+            target: "x86_64-unknown-linux-musl"
+          - os: windows-latest
+            target: "x86_64-pc-windows-gnu"
+          - os: windows-latest
+            target: "x86_64-pc-windows-msvc"
+        toolchain:
+          - nightly
+          - beta
+          - stable
+          - 1.91.0
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install musl-tools
+        if: matrix.os-target.target == 'x86_64-unknown-linux-musl'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{matrix.toolchain}}
+          components: rust-src
+      - name: Install target
+        run: rustup target add ${{matrix.os-target.target}}
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,cargo-nextest
+      - name: Enable type layout randomization
+        if: matrix.toolchain == 'nightly'
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "RUSTFLAGS=$RUSTFLAGS -Zrandomize-layout" >> $GITHUB_ENV
+          else
+            echo RUSTFLAGS=${RUSTFLAGS}\ -Zrandomize-layout >> $GITHUB_ENV
+          fi
+        shell: bash
+      - run: |
+          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-rustcrypto
+          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-rustcrypto
+      - run: |
+          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
+          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
+        if: matrix.os-target.target != 'aarch64-apple-ios'
+      - run: |
+          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-ring
+          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-ring
+      - run: |
+          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc-rs
+          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc-rs
+      - run: just ci-test --target ${{matrix.os-target.target}}
+        if: matrix.os-target.target != 'aarch64-apple-ios'
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      RUSTDOCFLAGS: -Dwarnings
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/install@cargo-docs-rs
+      - run: cargo docs-rs --package hpke-core
+      - run: cargo docs-rs --package hpke-crypto
+
+  clippy:
+    name: Clippy & MSRV
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.91.0
+          components: clippy
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: just clippy --all
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: llvm-tools, clippy, rust-src
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,cargo-llvm-cov,cargo-nextest
+      - run: just ci-test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: hanyu-dev/hpke

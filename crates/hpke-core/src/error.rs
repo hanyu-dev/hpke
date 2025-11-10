@@ -54,7 +54,7 @@ impl core::error::Error for Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Error::InvalidInput(msg) => write!(f, "Invalid input: {}", msg),
+            Error::InvalidInput(msg) => write!(f, "Invalid input: {msg}"),
             Error::InconsistentPsk => write!(f, "Inconsistent PSK input"),
             Error::MissingPsk => write!(f, "PSK input is required but missing"),
             Error::UnnecessaryPsk => write!(f, "PSK input is provided but not needed"),
@@ -64,7 +64,7 @@ impl fmt::Display for Error {
             Error::MessageLimitReached => {
                 write!(f, "The message limit for this AEAD, key, and nonce")
             }
-            Error::CryptoError(e) => write!(f, "Crypto error: {}", e),
+            Error::CryptoError(e) => write!(f, "Crypto error: {e}"),
         }
     }
 }
