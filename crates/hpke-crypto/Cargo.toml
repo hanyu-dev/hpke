@@ -53,7 +53,7 @@ _backend = []
 backend-graviola = ["_backend", "std", "dep:graviola"]
 
 # Crypto backend: AWS-LC
-backend-aws-lc = ["_backend", "dep:aws-lc-rs"]
+backend-aws-lc = ["_backend", "std", "dep:aws-lc-rs"]
 
 # Enable serialization support via serde
 serde = ["dep:serde"]
