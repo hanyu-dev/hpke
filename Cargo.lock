@@ -340,7 +340,6 @@ dependencies = [
  "graviola",
  "hpke-crypto",
  "quanta",
- "rand_chacha",
  "serde",
  "smallvec",
  "subtle",
