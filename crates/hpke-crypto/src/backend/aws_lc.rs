@@ -6,9 +6,9 @@
 //!
 //! | KEM | Supported |
 //! |:-:|:-:|
-//! | `DHKEM_P256_HKDF_SHA256` | ⚠️ |
-//! | `DHKEM_P384_HKDF_SHA384` | ⚠️ |
-//! | `DHKEM_P521_HKDF_SHA512` | ❌ |
+//! | `DHKEM_P256_HKDF_SHA256` | ✅ |
+//! | `DHKEM_P384_HKDF_SHA384` | ✅ |
+//! | `DHKEM_P521_HKDF_SHA512` | ✅ |
 //! | `DHKEM_X25519_HKDF_SHA256` | ✅ |
 //! | `DHKEM_X448_HKDF_SHA512` | ❌ |
 //!
@@ -30,8 +30,7 @@
 
 use alloc::vec::Vec;
 
-use rand_chacha::ChaCha20Rng;
-use rand_chacha::rand_core::SeedableRng;
+use aws_lc_rs::encoding::{AsBigEndian, Curve25519SeedBin, EcPrivateKeyBin};
 
 use crate::{
     Crypto, CryptoError, HpkeAead, HpkeAeadId, HpkeKdfId, HpkeKemId, HpkeKeyPair, HpkePrivateKey,
@@ -42,7 +41,6 @@ use crate::{
 /// See [module-level](self) documentation.
 pub struct HpkeCrypto {
     rng: aws_lc_rs::rand::SystemRandom,
-    rng_x25519: ChaCha20Rng,
 }
 
 impl HpkeCrypto {
@@ -53,12 +51,8 @@ impl HpkeCrypto {
     /// This function returns an error if the operating system's random number
     /// generator is not available.
     pub fn new() -> Result<Self, CryptoError> {
-        use aws_lc_rs::rand::SystemRandom;
-
         Ok(Self {
-            rng: SystemRandom::new(),
-            rng_x25519: ChaCha20Rng::try_from_os_rng()
-                .map_err(|_| CryptoError::InsufficientRandomness)?,
+            rng: aws_lc_rs::rand::SystemRandom::new(),
         })
     }
 }
@@ -77,14 +71,63 @@ impl Crypto for HpkeCrypto {
     }
 
     fn kem_generate_key_pair(&mut self, alg: HpkeKemId) -> Result<HpkeKeyPair, CryptoError> {
-        // `ring` doesn't have a `StaticSecret`, so we use x25519-dalek here.
         match alg {
             HpkeKemId::DHKEM_X25519_HKDF_SHA256 => {
-                let sk = x25519_dalek::StaticSecret::random_from_rng(&mut self.rng_x25519);
+                let sk = aws_lc_rs::agreement::PrivateKey::generate(&aws_lc_rs::agreement::X25519)
+                    .map_err(|_| CryptoError::Unspecified)?;
 
-                HpkeKeyPair::new_unchecked(alg, &sk, x25519_dalek::PublicKey::from(&sk))
+                let pk = sk
+                    .compute_public_key()
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                let sk = AsBigEndian::<Curve25519SeedBin>::as_be_bytes(&sk)
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                return HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk);
             }
-            _ => Err(CryptoError::KemUnsupported),
+            HpkeKemId::DHKEM_P256_HKDF_SHA256 => {
+                let sk =
+                    aws_lc_rs::agreement::PrivateKey::generate(&aws_lc_rs::agreement::ECDH_P256)
+                        .map_err(|_| CryptoError::Unspecified)?;
+
+                let pk = sk
+                    .compute_public_key()
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                let sk = AsBigEndian::<EcPrivateKeyBin>::as_be_bytes(&sk)
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk)
+            }
+            HpkeKemId::DHKEM_P384_HKDF_SHA384 => {
+                let sk =
+                    aws_lc_rs::agreement::PrivateKey::generate(&aws_lc_rs::agreement::ECDH_P384)
+                        .map_err(|_| CryptoError::Unspecified)?;
+
+                let pk = sk
+                    .compute_public_key()
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                let sk = AsBigEndian::<EcPrivateKeyBin>::as_be_bytes(&sk)
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk)
+            }
+            HpkeKemId::DHKEM_P521_HKDF_SHA512 => {
+                let sk =
+                    aws_lc_rs::agreement::PrivateKey::generate(&aws_lc_rs::agreement::ECDH_P521)
+                        .map_err(|_| CryptoError::Unspecified)?;
+
+                let pk = sk
+                    .compute_public_key()
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                let sk = AsBigEndian::<EcPrivateKeyBin>::as_be_bytes(&sk)
+                    .map_err(|_| CryptoError::Unspecified)?;
+
+                HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk)
+            }
+            _ => return Err(CryptoError::KemUnsupported),
         }
     }
 
@@ -294,31 +337,37 @@ impl Crypto for HpkeCrypto {
     }
 
     fn sk(&self, alg: HpkeKemId, sk: &[u8]) -> Result<HpkePrivateKey, CryptoError> {
-        match alg {
-            HpkeKemId::DHKEM_X25519_HKDF_SHA256 => {
-                let _ = x25519_dalek::StaticSecret::from(
-                    TryInto::<[u8; _]>::try_into(sk).map_err(|_| CryptoError::KemMalformedSkX)?,
-                );
+        let aws_lc_alg = match alg {
+            HpkeKemId::DHKEM_X25519_HKDF_SHA256 => &aws_lc_rs::agreement::X25519,
+            HpkeKemId::DHKEM_P256_HKDF_SHA256 => &aws_lc_rs::agreement::ECDH_P256,
+            HpkeKemId::DHKEM_P384_HKDF_SHA384 => &aws_lc_rs::agreement::ECDH_P384,
+            HpkeKemId::DHKEM_P521_HKDF_SHA512 => &aws_lc_rs::agreement::ECDH_P521,
+            _ => return Err(CryptoError::KemUnsupported),
+        };
 
-                HpkePrivateKey::new(alg, sk)
-            }
-            _ => Err(CryptoError::KemUnsupported),
-        }
+        let _ = aws_lc_rs::agreement::PrivateKey::from_private_key(&aws_lc_alg, sk)
+            .map_err(|_| CryptoError::KemMalformedSkX)?;
+
+        HpkePrivateKey::new(alg, sk)
     }
 
     fn pk(&self, alg: HpkeKemId, sk: HpkePrivateKeyRef<'_>) -> Result<HpkePublicKey, CryptoError> {
-        match alg {
-            HpkeKemId::DHKEM_X25519_HKDF_SHA256 => {
-                let sk = x25519_dalek::StaticSecret::from(
-                    TryInto::<[u8; _]>::try_into(sk.as_ref())
-                        .map_err(|_| CryptoError::KemMalformedSkX)?,
-                );
-                let pk = x25519_dalek::PublicKey::from(&sk);
+        let aws_lc_alg = match alg {
+            HpkeKemId::DHKEM_X25519_HKDF_SHA256 => &aws_lc_rs::agreement::X25519,
+            HpkeKemId::DHKEM_P256_HKDF_SHA256 => &aws_lc_rs::agreement::ECDH_P256,
+            HpkeKemId::DHKEM_P384_HKDF_SHA384 => &aws_lc_rs::agreement::ECDH_P384,
+            HpkeKemId::DHKEM_P521_HKDF_SHA512 => &aws_lc_rs::agreement::ECDH_P521,
+            _ => return Err(CryptoError::KemUnsupported),
+        };
 
-                Ok(HpkePublicKey::new(alg, pk.as_bytes()).unwrap())
-            }
-            _ => Err(CryptoError::KemUnsupported),
-        }
+        let sk = aws_lc_rs::agreement::PrivateKey::from_private_key(&aws_lc_alg, &sk)
+            .map_err(|_| CryptoError::KemMalformedSkX)?;
+
+        let pk = sk
+            .compute_public_key()
+            .map_err(|_| CryptoError::Unspecified)?;
+
+        HpkePublicKey::new(alg, pk.as_ref())
     }
 
     fn dh(
@@ -327,21 +376,22 @@ impl Crypto for HpkeCrypto {
         sk_x: HpkePrivateKeyRef<'_>,
         pk_y: HpkePublicKeyRef<'_>,
     ) -> Result<SharedSecret, CryptoError> {
-        match alg {
-            HpkeKemId::DHKEM_X25519_HKDF_SHA256 => {
-                let pk = x25519_dalek::PublicKey::from(
-                    TryInto::<[u8; _]>::try_into(pk_y.as_ref())
-                        .map_err(|_| CryptoError::KemMalformedPkX)?,
-                );
-                let sk = x25519_dalek::StaticSecret::from(
-                    TryInto::<[u8; _]>::try_into(sk_x.as_ref())
-                        .map_err(|_| CryptoError::KemMalformedSkX)?,
-                );
-                let shared_secret = sk.diffie_hellman(&pk);
-                Ok(SharedSecret::new(shared_secret.as_bytes()))
-            }
-            _ => Err(CryptoError::KemOpUnsupported),
-        }
+        let aws_lc_alg = match alg {
+            HpkeKemId::DHKEM_X25519_HKDF_SHA256 => &aws_lc_rs::agreement::X25519,
+            HpkeKemId::DHKEM_P256_HKDF_SHA256 => &aws_lc_rs::agreement::ECDH_P256,
+            HpkeKemId::DHKEM_P384_HKDF_SHA384 => &aws_lc_rs::agreement::ECDH_P384,
+            HpkeKemId::DHKEM_P521_HKDF_SHA512 => &aws_lc_rs::agreement::ECDH_P521,
+            _ => return Err(CryptoError::KemUnsupported),
+        };
+
+        let sk_x = aws_lc_rs::agreement::PrivateKey::from_private_key(&aws_lc_alg, &sk_x)
+            .map_err(|_| CryptoError::KemMalformedSkX)?;
+
+        let pk_y = aws_lc_rs::agreement::UnparsedPublicKey::new(&aws_lc_alg, pk_y);
+
+        aws_lc_rs::agreement::agree(&sk_x, &pk_y, CryptoError::Unspecified, |shared_secret| {
+            Ok(SharedSecret::new(shared_secret))
+        })
     }
 }
 
