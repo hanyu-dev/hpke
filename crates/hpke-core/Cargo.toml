@@ -1,6 +1,6 @@
 [package]
 name = "hpke-core"
-version = "0.0.0"
+version = "0.0.1"
 edition.workspace = true
 rust-version.workspace = true
 authors.workspace = true
@@ -15,7 +15,7 @@ repository.workspace = true
 
 [dependencies]
 const-hex = { version = "1.16", default-features = false, features = ["alloc"], optional = true }
-hpke-crypto = { version = "=0.0.0", path = "../hpke-crypto", default-features = false }
+hpke-crypto = { version = "=0.0.1", path = "../hpke-crypto", default-features = false }
 serde = { version = "1.0", features = ["derive"], optional = true }
 serde_json = { version = "1.0", features = ["preserve_order"], optional = true }
 smallvec = "=2.0.0-alpha.12"
