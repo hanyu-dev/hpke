@@ -529,6 +529,9 @@ pub enum CryptoError {
     /// This error is rarely returned.
     InsufficientRandomness,
 
+    /// Unspecified error
+    Unspecified,
+
     /// A crypto library error.
     Custom(Box<dyn core::error::Error + Send + Sync + 'static>),
 }
@@ -560,6 +563,7 @@ impl fmt::Display for CryptoError {
             Self::AeadOpen => write!(f, "AEAD open error"),
             Self::AeadUnsupported => write!(f, "AEAD unsupported"),
             Self::InsufficientRandomness => write!(f, "Insufficient randomness"),
+            Self::Unspecified => write!(f, "Unspecified crypto error"),
             Self::Custom(e) => write!(f, "Crypto library error: {e}"),
         }
     }
