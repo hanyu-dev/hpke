@@ -11,16 +11,22 @@ use hpke_crypto::{Crypto, HpkeKemId};
         hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
-    [HpkeKemId::DHKEM_X25519_HKDF_SHA256]
+    [
+        HpkeKemId::DHKEM_X25519_HKDF_SHA256,
+        HpkeKemId::DHKEM_P256_HKDF_SHA256,
+        HpkeKemId::DHKEM_P384_HKDF_SHA384,
+    ]
 )]
 #[test_case::test_matrix(
     [
-        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
     ],
     [
-        hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
     ],
-    [HpkeKemId::DHKEM_P256_HKDF_SHA256, HpkeKemId::DHKEM_P384_HKDF_SHA384]
+    [
+        HpkeKemId::DHKEM_P521_HKDF_SHA512,
+    ]
 )]
 fn test_kem_generate_key_pair(
     mut backend_1: impl Crypto,
