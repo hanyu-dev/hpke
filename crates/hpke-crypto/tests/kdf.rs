@@ -41,16 +41,9 @@ fn test_labeled_kdf(backend: impl Crypto, alg: HpkeKdfId) {
         124, 84, 206, 239, 213, 34, 141, 43, 157, 156, 197, 224,
     ];
 
-    let okm = hpke_crypto::kdf::labeled_expand(
-        &backend,
-        alg,
-        &suite_id,
-        prk.as_ref(),
-        "test",
-        info,
-        32,
-    )
-    .unwrap();
+    let okm =
+        hpke_crypto::kdf::labeled_expand(&backend, alg, &suite_id, prk.as_ref(), "test", info, 32)
+            .unwrap();
 
     assert_eq!(&*okm, &EXPANDED);
 }

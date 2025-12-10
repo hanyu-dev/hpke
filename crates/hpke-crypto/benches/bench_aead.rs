@@ -2,8 +2,8 @@ use std::hint::black_box;
 use std::sync::LazyLock;
 
 use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
-use quanta::Instant;
 use hpke_crypto::{Crypto, HpkeAead};
+use quanta::Instant;
 
 static BACKEND_AWS_LC_RS: LazyLock<hpke_crypto::backend::HpkeCryptoAwsLc> =
     LazyLock::new(|| hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap());

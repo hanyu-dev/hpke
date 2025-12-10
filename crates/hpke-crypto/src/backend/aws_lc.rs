@@ -83,7 +83,7 @@ impl Crypto for HpkeCrypto {
                 let sk = AsBigEndian::<Curve25519SeedBin>::as_be_bytes(&sk)
                     .map_err(|_| CryptoError::Unspecified)?;
 
-                return HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk);
+                HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk)
             }
             HpkeKemId::DHKEM_P256_HKDF_SHA256 => {
                 let sk =
@@ -127,7 +127,7 @@ impl Crypto for HpkeCrypto {
 
                 HpkeKeyPair::new_unchecked(alg, sk.as_ref(), &pk)
             }
-            _ => return Err(CryptoError::KemUnsupported),
+            _ => Err(CryptoError::KemUnsupported),
         }
     }
 
@@ -345,7 +345,7 @@ impl Crypto for HpkeCrypto {
             _ => return Err(CryptoError::KemUnsupported),
         };
 
-        let _ = aws_lc_rs::agreement::PrivateKey::from_private_key(&aws_lc_alg, sk)
+        let _ = aws_lc_rs::agreement::PrivateKey::from_private_key(aws_lc_alg, sk)
             .map_err(|_| CryptoError::KemMalformedSkX)?;
 
         HpkePrivateKey::new(alg, sk)
@@ -360,7 +360,7 @@ impl Crypto for HpkeCrypto {
             _ => return Err(CryptoError::KemUnsupported),
         };
 
-        let sk = aws_lc_rs::agreement::PrivateKey::from_private_key(&aws_lc_alg, &sk)
+        let sk = aws_lc_rs::agreement::PrivateKey::from_private_key(aws_lc_alg, &sk)
             .map_err(|_| CryptoError::KemMalformedSkX)?;
 
         let pk = sk
@@ -384,12 +384,12 @@ impl Crypto for HpkeCrypto {
             _ => return Err(CryptoError::KemUnsupported),
         };
 
-        let sk_x = aws_lc_rs::agreement::PrivateKey::from_private_key(&aws_lc_alg, &sk_x)
+        let sk_x = aws_lc_rs::agreement::PrivateKey::from_private_key(aws_lc_alg, &sk_x)
             .map_err(|_| CryptoError::KemMalformedSkX)?;
 
-        let pk_y = aws_lc_rs::agreement::UnparsedPublicKey::new(&aws_lc_alg, pk_y);
+        let pk_y = aws_lc_rs::agreement::UnparsedPublicKey::new(aws_lc_alg, pk_y);
 
-        aws_lc_rs::agreement::agree(&sk_x, &pk_y, CryptoError::Unspecified, |shared_secret| {
+        aws_lc_rs::agreement::agree(&sk_x, pk_y, CryptoError::Unspecified, |shared_secret| {
             Ok(SharedSecret::new(shared_secret))
         })
     }

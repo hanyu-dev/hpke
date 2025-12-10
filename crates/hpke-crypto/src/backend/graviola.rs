@@ -42,7 +42,7 @@ pub struct HpkeCrypto {}
 
 impl HpkeCrypto {
     /// Create a new `HpkeCrypto` instance.
-    /// 
+    ///
     /// # Errors
     ///
     /// Currently, this does nothing and always succeeds.
