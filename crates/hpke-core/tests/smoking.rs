@@ -9,7 +9,6 @@ use hpke_core::*;
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
         hpke_crypto::backend::HpkeCryptoGraviola::new,
         hpke_crypto::backend::HpkeCryptoRing::new,
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new
     ],
     [
         HpkeMode::Base,

@@ -9,24 +9,20 @@ use hpke_crypto::{Crypto, HpkeKemId};
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [HpkeKemId::DHKEM_X25519_HKDF_SHA256]
 )]
 #[test_case::test_matrix(
     [
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap(),
     ],
     [
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap(),
     ],
     [HpkeKemId::DHKEM_P256_HKDF_SHA256, HpkeKemId::DHKEM_P384_HKDF_SHA384]
 )]

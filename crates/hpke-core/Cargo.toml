@@ -27,7 +27,6 @@ hpke-core = { path = ".", features = ["std", "hazmat", "serde", "test-vectors"] 
 hpke-crypto = { path = "../hpke-crypto", features = [
     "std",
     "hazmat",
-    "backend-rustcrypto",
     "backend-graviola",
     "backend-ring",
     "backend-aws-lc-rs",

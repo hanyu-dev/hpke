@@ -1236,7 +1236,6 @@ mod kat_tests {
             hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
             hpke_crypto::backend::HpkeCryptoRing::new,
-            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_setup<C, F>(crypto_backend: F)
@@ -1363,7 +1362,6 @@ mod kat_tests {
             hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
             hpke_crypto::backend::HpkeCryptoRing::new,
-            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_key_schedule<C: Crypto + Send + Sync + UnwindSafe, F>(crypto_backend: F)
@@ -1536,7 +1534,6 @@ mod kat_tests {
             hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
             hpke_crypto::backend::HpkeCryptoRing::new,
-            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_encryption<C: Crypto + Send + Sync + UnwindSafe, F>(crypto_backend: F)
@@ -1630,7 +1627,6 @@ mod kat_tests {
             hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
             hpke_crypto::backend::HpkeCryptoRing::new,
-            hpke_crypto::backend::HpkeCryptoRustCrypto::new
         ]
     )]
     fn test_exported_values<C: Crypto + Send + Sync + UnwindSafe, F>(crypto_backend: F)

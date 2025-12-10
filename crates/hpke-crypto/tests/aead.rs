@@ -24,13 +24,11 @@ const NONCE: [u8; 12] = [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap()
     ],
     [
         HpkeAead::Aes128Gcm { key: AES_128_KEY, nonce: NONCE },

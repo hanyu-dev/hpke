@@ -11,8 +11,6 @@ static BACKEND_GRAVIOLA: LazyLock<hpke_crypto::backend::HpkeCryptoGraviola> =
     LazyLock::new(|| hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap());
 static BACKEND_RING: LazyLock<hpke_crypto::backend::HpkeCryptoRing> =
     LazyLock::new(|| hpke_crypto::backend::HpkeCryptoRing::new().unwrap());
-static BACKEND_RUSTCRYPTO: LazyLock<hpke_crypto::backend::HpkeCryptoRustCrypto> =
-    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoRustCrypto::new().unwrap());
 
 macro_rules! bench {
     (Enc => $fn_name:ident, $alg:ident, $name:expr, $key_len:expr) => {
@@ -66,21 +64,6 @@ macro_rules! bench {
                         size_name,
                         input,
                         &*BACKEND_RING,
-                        $alg,
-                        key,
-                        nonce,
-                        &aad
-                    );
-                }
-
-                {
-                    bench!(
-                        Enc =>
-                        group,
-                        "rustcrypto",
-                        size_name,
-                        input,
-                        &*BACKEND_RUSTCRYPTO,
                         $alg,
                         key,
                         nonce,
@@ -145,21 +128,6 @@ macro_rules! bench {
                         size_name,
                         input,
                         &*BACKEND_RING,
-                        $alg,
-                        key,
-                        nonce,
-                        &aad
-                    );
-                }
-
-                {
-                    bench!(
-                        Dec =>
-                        group,
-                        "rustcrypto",
-                        size_name,
-                        input,
-                        &*BACKEND_RUSTCRYPTO,
                         $alg,
                         key,
                         nonce,

@@ -80,9 +80,6 @@ jobs:
           fi
         shell: bash
       - run: |
-          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-rustcrypto
-          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-rustcrypto
-      - run: |
           cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
           cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
         if: matrix.os-target.target != 'aarch64-apple-ios'
