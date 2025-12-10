@@ -18,7 +18,7 @@ This is originally a fork of [hpke-rs](https://crates.io/crates/hpke-rs) and hea
 
   Currently supports the following:
 
-  - `backend-aws-lc-rs`: uses [aws-lc-rs](https://crates.io/crates/aws-lc-rs) as the cryptographic backend.
+  - `backend-aws-lc`: uses [aws-lc-rs](https://crates.io/crates/aws-lc-rs) as the cryptographic backend.
   - `backend-graviola`: uses [graviola](https://crates.io/crates/graviola) as the cryptographic backend.
 
 ## License

@@ -5,8 +5,8 @@ use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_m
 use quanta::Instant;
 use hpke_crypto::{Crypto, HpkeAead};
 
-static BACKEND_AWS_LC_RS: LazyLock<hpke_crypto::backend::HpkeCryptoAwsLcRs> =
-    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap());
+static BACKEND_AWS_LC_RS: LazyLock<hpke_crypto::backend::HpkeCryptoAwsLc> =
+    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap());
 static BACKEND_GRAVIOLA: LazyLock<hpke_crypto::backend::HpkeCryptoGraviola> =
     LazyLock::new(|| hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap());
 

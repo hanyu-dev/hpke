@@ -6,11 +6,11 @@ use hpke_crypto::{Crypto, HpkeKemId};
 
 #[test_case::test_matrix(
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [HpkeKemId::DHKEM_X25519_HKDF_SHA256]

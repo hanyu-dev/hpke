@@ -1,6 +1,6 @@
 //! [`Crypto`] primitives implementation using [`aws_lc_rs`].
 //!
-//! Requires the `backend-aws-lc-rs` feature.
+//! Requires the `backend-aws-lc` feature.
 //!
 //! # Supported
 //!

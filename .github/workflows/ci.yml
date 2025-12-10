@@ -84,8 +84,8 @@ jobs:
           cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
         if: matrix.os-target.target != 'aarch64-apple-ios'
       - run: |
-          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc-rs
-          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc-rs
+          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc
+          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc
       - run: just ci-test --target ${{matrix.os-target.target}}
         if: matrix.os-target.target != 'aarch64-apple-ios'
 

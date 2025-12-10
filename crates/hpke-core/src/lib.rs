@@ -1233,7 +1233,7 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoAwsLc::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
         ]
     )]
@@ -1358,7 +1358,7 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoAwsLc::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
         ]
     )]
@@ -1529,7 +1529,7 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoAwsLc::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
         ]
     )]
@@ -1621,7 +1621,7 @@ mod kat_tests {
 
     #[test_case::test_matrix(
         [
-            hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
+            hpke_crypto::backend::HpkeCryptoAwsLc::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
         ]
     )]

@@ -4,7 +4,7 @@ use hpke_crypto::{Crypto, HpkeKdfId, IkmRef};
 
 #[test_case::test_matrix(
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [
@@ -57,11 +57,11 @@ fn test_labeled_kdf(backend: impl Crypto, alg: HpkeKdfId) {
 
 #[test_case::test_matrix(
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [
@@ -176,11 +176,11 @@ fn test_kdf_cross(mut backend_1: impl Crypto, mut backend_2: impl Crypto, alg: H
 
 #[test_case::test_matrix(
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [
-        hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
+        hpke_crypto::backend::HpkeCryptoAwsLc::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
     ],
     [

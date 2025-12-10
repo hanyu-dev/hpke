@@ -33,7 +33,7 @@ hpke-crypto = { path = ".", features = [
     "std",
     "hazmat",
     "backend-graviola",
-    "backend-aws-lc-rs",
+    "backend-aws-lc",
     "serde",
 ] }
 test-case = "3.3"
@@ -53,8 +53,8 @@ _backend = []
 # Crypto backend: Graviola
 backend-graviola = ["_backend", "std", "dep:graviola"]
 
-# Crypto backend: AWS-LC-RS
-backend-aws-lc-rs = ["_backend", "dep:aws-lc-rs", "dep:rand_chacha", "dep:x25519-dalek"]
+# Crypto backend: AWS-LC
+backend-aws-lc = ["_backend", "dep:aws-lc-rs", "dep:rand_chacha", "dep:x25519-dalek"]
 
 # Enable serialization support via serde
 serde = ["dep:serde"]
