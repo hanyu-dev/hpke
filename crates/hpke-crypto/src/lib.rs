@@ -1150,13 +1150,13 @@ impl HpkeKeyPair {
     #[inline]
     /// Returns the private key (skX).
     pub fn sk(&self) -> HpkePrivateKeyRef<'_> {
-        HpkePrivateKeyRef::const_from(&self.inner[..self.split_offset as usize])
+        HpkePrivateKeyRef::from_inner(&self.inner[..self.split_offset as usize])
     }
 
     #[inline]
     /// Returns the public key (pkX).
     pub fn pk(&self) -> HpkePublicKeyRef<'_> {
-        HpkePublicKeyRef::const_from(&self.inner[self.split_offset as usize..])
+        HpkePublicKeyRef::from_inner(&self.inner[self.split_offset as usize..])
     }
 }
 
@@ -1208,7 +1208,7 @@ debug_hex!(HpkePublicKeyRef<'_>, inner);
 
 impl<'a> From<&'a HpkePublicKey> for HpkePublicKeyRef<'a> {
     fn from(value: &'a HpkePublicKey) -> Self {
-        Self::const_from(&value.inner)
+        Self::from_inner(&value.inner)
     }
 }
 
@@ -1319,7 +1319,7 @@ impl PartialEq for HpkePrivateKeyRef<'_> {
 
 impl<'a> From<&'a HpkePrivateKey> for HpkePrivateKeyRef<'a> {
     fn from(value: &'a HpkePrivateKey) -> Self {
-        Self::const_from(&value.inner)
+        Self::from_inner(&value.inner)
     }
 }
 
@@ -1364,7 +1364,7 @@ debug_hex!(SharedSecretRef<'_>, inner);
 
 impl<'a> From<&'a SharedSecret> for SharedSecretRef<'a> {
     fn from(value: &'a SharedSecret) -> Self {
-        Self::const_from(&value.inner)
+        Self::from_inner(&value.inner)
     }
 }
 
@@ -1409,7 +1409,7 @@ debug_hex!(EncapsulatedSecretRef<'_>, inner);
 
 impl<'a> From<&'a EncapsulatedSecret> for EncapsulatedSecretRef<'a> {
     fn from(value: &'a EncapsulatedSecret) -> Self {
-        Self::const_from(&value.inner)
+        Self::from_inner(&value.inner)
     }
 }
 
@@ -1457,7 +1457,7 @@ debug_hex!(PrkRef<'_>, inner);
 
 impl<'a> From<&'a Prk> for PrkRef<'a> {
     fn from(value: &'a Prk) -> Self {
-        Self::const_from(&value.inner)
+        Self::from_inner(&value.inner)
     }
 }
 

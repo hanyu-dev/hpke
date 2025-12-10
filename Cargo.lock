@@ -940,9 +940,9 @@ checksum = "f17a85883d4e6d00e8a97c586de764dabcc06133f7f1d55dce5cdc070ad7fe59"
 
 [[package]]
 name = "wrapper-lite"
-version = "0.3.2"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52e1e545c8bb864903c377831cc3c576bc4989456431cf4e77820f9db39fec0e"
+checksum = "ee826bf0782bfbdc029b96adb7fe0f99de7354b68f33aa499794e48c78c86328"
 
 [[package]]
 name = "x25519-dalek"
