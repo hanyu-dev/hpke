@@ -19,7 +19,7 @@ const-hex = { version = "1.16", default-features = false, features = ["alloc"] }
 graviola = { version = "0.3.0", optional = true }
 rand_chacha = { version = "0.9.0", features = ["os_rng"], optional = true }
 serde = { version = "1.0", optional = true, default-features = false }
-smallvec = "2.0.0-alpha.11"
+smallvec = "=2.0.0-alpha.12"
 subtle = { version = "2.6", default-features = false }
 wrapper-lite = "0.3.0"
 x25519-dalek = { version = "3.0.0-pre.1", features = ["static_secrets"], optional = true }

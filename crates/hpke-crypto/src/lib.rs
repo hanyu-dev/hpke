@@ -1190,7 +1190,7 @@ impl HpkePublicKey {
         }
 
         Ok(Self {
-            inner: SmallVec::from_slice(bytes),
+            inner: SmallVec::from(bytes),
         })
     }
 }
@@ -1217,7 +1217,7 @@ impl HpkePublicKeyRef<'_> {
     /// Converts this reference to an owned [`HpkePublicKey`].
     pub fn to_owned(&self) -> HpkePublicKey {
         HpkePublicKey {
-            inner: SmallVec::from_slice(self.inner),
+            inner: SmallVec::from(self.inner),
         }
     }
 }
@@ -1276,7 +1276,7 @@ impl HpkePrivateKey {
         }
 
         Ok(Self {
-            inner: SmallVec::from_slice(bytes),
+            inner: SmallVec::from(bytes),
         })
     }
 }
@@ -1339,7 +1339,7 @@ impl SharedSecret {
     /// Constructs a new [`SharedSecret`] produced by the KEM.
     pub fn new(bytes: &[u8]) -> Self {
         Self {
-            inner: SmallVec::from_slice(bytes),
+            inner: SmallVec::from(bytes),
         }
     }
 
@@ -1385,7 +1385,7 @@ impl EncapsulatedSecret {
     /// decapsulating the shared secret.
     pub fn new(bytes: &[u8]) -> Self {
         Self {
-            inner: SmallVec::from_slice(bytes),
+            inner: SmallVec::from(bytes),
         }
     }
 
@@ -1439,7 +1439,7 @@ impl Prk {
     /// Construct a new [`Prk`] directly with the given value.
     pub fn new_less_safe(bytes: &[u8]) -> Self {
         Self {
-            inner: SmallVec::from_slice(bytes),
+            inner: SmallVec::from(bytes),
         }
     }
 }
