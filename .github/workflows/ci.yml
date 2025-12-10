@@ -38,8 +38,6 @@ jobs:
         os-target:
           - os: macos-latest
             target: "aarch64-apple-darwin"
-          - os: macos-latest
-            target: "aarch64-apple-ios"
           - os: ubuntu-latest
             target: "x86_64-unknown-linux-gnu"
           - os: ubuntu-latest
@@ -63,13 +61,13 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y musl-tools
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{matrix.toolchain}}
-          components: rust-src
-      - name: Install target
-        run: rustup target add ${{matrix.os-target.target}}
+          toolchain: ${{ matrix.toolchain }}
+          components: llvm-tools, clippy, rust-src
       - uses: taiki-e/install-action@v2
         with:
-          tool: just,cargo-nextest
+          tool: just,cargo-llvm-cov,cargo-nextest
+      - name: Install target
+        run: rustup target add ${{ matrix.os-target.target }}
       - name: Enable type layout randomization
         if: matrix.toolchain == 'nightly'
         run: |
@@ -79,15 +77,7 @@ jobs:
             echo RUSTFLAGS=${RUSTFLAGS}\ -Zrandomize-layout >> $GITHUB_ENV
           fi
         shell: bash
-      - run: |
-          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
-          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-graviola
-        if: matrix.os-target.target != 'aarch64-apple-ios'
-      - run: |
-          cargo build --verbose --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc
-          cargo build --verbose --release --target ${{matrix.os-target.target}} --package hpke-crypto --features backend-aws-lc
-      - run: just ci-test --target ${{matrix.os-target.target}}
-        if: matrix.os-target.target != 'aarch64-apple-ios'
+      - run: just ci-test --target ${{ matrix.os-target.target }}
 
   docs:
     name: Documentation
