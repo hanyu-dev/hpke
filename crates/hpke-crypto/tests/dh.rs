@@ -8,12 +8,10 @@ use hpke_crypto::{Crypto, HpkeKemId};
     [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
     ],
     [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
     ],
     [HpkeKemId::DHKEM_X25519_HKDF_SHA256]
 )]

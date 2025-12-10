@@ -117,7 +117,6 @@ mod tests {
         [
             hpke_crypto::backend::HpkeCryptoAwsLcRs::new,
             hpke_crypto::backend::HpkeCryptoGraviola::new,
-            hpke_crypto::backend::HpkeCryptoRing::new,
         ]
     )]
     fn kat_derive_key_pair<C: Crypto + Send + Sync + core::panic::UnwindSafe, F>(crypto_backend: F)

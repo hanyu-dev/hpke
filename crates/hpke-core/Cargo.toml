@@ -28,7 +28,6 @@ hpke-crypto = { path = "../hpke-crypto", features = [
     "std",
     "hazmat",
     "backend-graviola",
-    "backend-ring",
     "backend-aws-lc-rs",
 ] }
 rand = "0.9"

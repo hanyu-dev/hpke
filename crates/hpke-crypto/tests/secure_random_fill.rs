@@ -6,12 +6,10 @@ use hpke_crypto::Crypto;
     [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
     ],
     [
         hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap(),
         hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap(),
-        hpke_crypto::backend::HpkeCryptoRing::new().unwrap(),
     ]
 )]
 fn test_secure_random_fill(mut backend_1: impl Crypto, mut backend_2: impl Crypto) {

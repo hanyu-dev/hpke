@@ -9,8 +9,6 @@ static BACKEND_AWS_LC_RS: LazyLock<hpke_crypto::backend::HpkeCryptoAwsLcRs> =
     LazyLock::new(|| hpke_crypto::backend::HpkeCryptoAwsLcRs::new().unwrap());
 static BACKEND_GRAVIOLA: LazyLock<hpke_crypto::backend::HpkeCryptoGraviola> =
     LazyLock::new(|| hpke_crypto::backend::HpkeCryptoGraviola::new().unwrap());
-static BACKEND_RING: LazyLock<hpke_crypto::backend::HpkeCryptoRing> =
-    LazyLock::new(|| hpke_crypto::backend::HpkeCryptoRing::new().unwrap());
 
 macro_rules! bench {
     (Enc => $fn_name:ident, $alg:ident, $name:expr, $key_len:expr) => {
@@ -55,21 +53,6 @@ macro_rules! bench {
                         &aad
                     );
                 }
-
-                {
-                    bench!(
-                        Enc =>
-                        group,
-                        "ring",
-                        size_name,
-                        input,
-                        &*BACKEND_RING,
-                        $alg,
-                        key,
-                        nonce,
-                        &aad
-                    );
-                }
             }
         }
     };
@@ -84,7 +67,7 @@ macro_rules! bench {
             for (size, size_name) in [(32, "32B"), (2048, "2KB"), (8192, "8KB"), (16384, "16KB")] {
                 let mut input = vec![0u8; size];
 
-                BACKEND_RING
+                BACKEND_GRAVIOLA
                     .aead_seal_in_place(&HpkeAead::$alg { key, nonce }, &aad, &mut input)
                     .unwrap();
 
@@ -113,21 +96,6 @@ macro_rules! bench {
                         size_name,
                         input,
                         &*BACKEND_GRAVIOLA,
-                        $alg,
-                        key,
-                        nonce,
-                        &aad
-                    );
-                }
-
-                {
-                    bench!(
-                        Dec =>
-                        group,
-                        "ring",
-                        size_name,
-                        input,
-                        &*BACKEND_RING,
                         $alg,
                         key,
                         nonce,
