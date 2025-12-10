@@ -22,7 +22,7 @@ smallvec = "=2.0.0-alpha.12"
 zeroize = "1.8"
 
 [dev-dependencies]
-criterion = { version = "0.7", features = ["html_reports"] }
+criterion = { version = "0.8.1", features = ["html_reports"] }
 hpke-core = { path = ".", features = ["std", "hazmat", "serde", "test-vectors"] }
 hpke-crypto = { path = "../hpke-crypto", features = [
     "std",
