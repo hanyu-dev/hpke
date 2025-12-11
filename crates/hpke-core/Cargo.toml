@@ -41,7 +41,7 @@ default = []
 std = ["serde?/std", "hpke-crypto/std"]
 
 # Enable hazmat APIs / behaviours
-hazmat = ["dep:const-hex"]
+hazmat = ["dep:const-hex", "hpke-crypto/hazmat"]
 
 # Enable serialization support via serde
 serde = ["dep:serde", "hpke-crypto/serde"]
